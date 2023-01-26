@@ -15,25 +15,29 @@ class AlunosSeeder extends Seeder
      */
     public function run()
     {
-        Alunos::truncate();
-        $csvData = fopen(base_path('database/csv/relacao-alunos.csv'), 'r');
-        $transRow = true;
+        try{
+            Alunos::truncate();
+            $csvData = fopen(base_path('database/csv/relacao-alunos.csv'), 'r');
+            $transRow = true;
 
-        while(($data = fgetcsv($csvData, 555, ';')) !== false){
-            if(!$transRow){
-                $nome = '';
-                $conjunct_array_origin = array(" Da ", " De ", " Dos ");
-                $conjunct_array = array(" da ", " de ", " dos ");
+            while(($data = fgetcsv($csvData, 555, ';')) !== false){
+                if(!$transRow){
+                    $nome = '';
+                    $conjunct_array_origin = array(" Da ", " De ", " Dos ");
+                    $conjunct_array = array(" da ", " de ", " dos ");
 
-                $nome = str_replace($conjunct_array_origin, $conjunct_array, mb_convert_case(mb_strtolower($data[0], 'UTF-8'), MB_CASE_TITLE, 'UTF-8'));
-                Alunos::create([
-                    'nome' => trim($nome)
-                ]);
+                    $nome = str_replace($conjunct_array_origin, $conjunct_array, mb_convert_case(mb_strtolower($data[0], 'UTF-8'), MB_CASE_TITLE, 'UTF-8'));
+                    Alunos::create([
+                        'nome' => trim($nome)
+                    ]);
 
-                $nome = '';
+                    $nome = '';
+                }
+                $transRow = false;
             }
-            $transRow = false;
+            fclose($csvData);
+        }catch(\Exception $e){
+            echo $e->getMessage();
         }
-        fclose($csvData);
     }
 }

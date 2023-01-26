@@ -15,7 +15,7 @@ class CreateAlunosTable extends Migration
     {
         Schema::create('alunos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nome')->nullable();
+            $table->string('nome', 160)->nullable();
         });
     }
 
